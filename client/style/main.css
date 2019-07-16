@@ -1,0 +1,120 @@
+.help_b{
+    min-height: 100px;
+    width: 98%;
+    margin:auto;
+}
+.mn_block{
+    min-width: 100px;
+    max-width: 300px;
+    float:left;
+    clear:left;
+    border: 2px solid #73AD21;
+    background-color: beige;
+    margin:5px;
+    padding: 10px 10px 10px 10px; 
+
+}
+.monitor_group{
+    float:left;
+    width:100%;
+    padding-top:5px;
+    padding-bottom: 5px;
+    border-bottom: 3px dashed burlywood;
+}
+.peer_block{
+    float:left;
+    border-radius: 10px;
+    border: 2px solid #73AD21;
+    background-color: aliceblue;
+    margin:10px;
+    padding: 10px 10px 10px 10px; 
+
+}
+.peer_work{
+    float:left;
+    width: 20px;
+    height: 20px;
+}
+.peer_descr{
+    float:left;
+    margin-right: 10px;
+}
+.mn_interactive{
+    border-width: 2px;
+}
+.mn_interactive:hover{
+    outline:4px solid green;
+    cursor: default;
+}
+
+.mn_active{
+    font-weight: bold;
+    color:green;
+}
+.mn_descr{
+    float:left;
+    font-size: 1em;
+    clear:left;
+    color:darkcyan;
+}
+
+.mn_value{
+    float:left;
+    font-size: 2em;
+    font-weight: bold;
+}
+.mn_mu{
+    float:left;
+    font-size: 2em;
+    font-weight: bold;
+}
+.mn_work{
+    float:right;
+    width: 50px;
+    height: 50px;
+}
+.mn_d {
+    float:left;
+}
+.mn_dis{
+    opacity: 0.2;
+}
+.mn_updated{
+    color: green;
+    opacity: 1;
+}
+.mn_updatedf{
+    color: red;
+    opacity: 1;
+}
+.peer_updated{
+    border-color: greenyellow;
+    background-color: azure;
+}
+.monitor_cont1{
+    float:left;
+    width: 100%;
+}
+.monitor_bb{
+    width:100%;
+    height: 150px;
+}
+.monitor_pcont{
+    background-color: lightgray;
+}
+.gr_block{
+    min-width: 100px;
+    float:left;
+    border: 2px dashed lightskyblue;
+    margin:5px;
+    padding: 10px 10px 10px 10px; 
+}
+.gr_content{
+
+}
+.gr_descr{
+    font-size: 1.2em;
+    color: crimson;
+    font-weight: bold;
+    text-align: center;
+}
