@@ -36,11 +36,11 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     this.unmark = function (style) {
         clr(this.valueE, style);
     };
-    this.update = function (d) {
+    this.update = function (d) {console.log(d);
 		var value=null;
 		var state=null;
-		var vs = 0;
-		var vns = 0;
+		var vs = null;
+		var vns = null;
 		if (d !== null && typeof d[0] !== 'undefined') {
 		   value = parseFloat(d[0].value);
 		   state = parseInt(d[0].state);
