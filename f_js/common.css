@@ -437,9 +437,6 @@ td {
 .active{
     outline: 3px solid blue;
 }
-input{
-    /*width: 90%;*/
-}
 .on{
     color:green;
 }

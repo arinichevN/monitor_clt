@@ -12,6 +12,14 @@ function time(d, h, m, s) {
     };
 }
 
+function cpObj(v){
+	out = {};
+	for(var p in v){
+		out[p] = v[p];
+	}
+	return out;
+}
+
 function time_now() {
     return parseInt((Date.now()) / 1000);
 }
@@ -321,39 +329,65 @@ function c_svg(tag) {
 function g(id) {
     return document.getElementById(id);
 }
+
+function acont(p, c){//console.log(p,c);
+	if (c instanceof Element) {
+		if (p instanceof Element) {
+			p.appendChild(c);
+		} else {//p not element
+			acont(p.container, c);
+		}
+	} else {//c not element
+		if (p instanceof Element) {
+			acont(p, c.container);
+		} else {//p not element
+			acont(p.container, c.container);
+		}
+	}
+	
+}
 function a(p, c) {
     if (c instanceof Array) {
         for (var i = 0; i < c.length; i++) {
-            if (c[i] instanceof Element || c[i] instanceof Text) {
-                if (p instanceof Element) {
-                    p.appendChild(c[i]);
-                } else {
-                    p.container.appendChild(c[i]);
-                }
-            } else {
-                if (p instanceof Element) {
-                    p.appendChild(c[i].container);
-                } else {
-                    p.container.appendChild(c[i].container);
-                }
-            }
+			acont(p, c[i]);
         }
     } else {
-        if (c instanceof Element) {
-            if (p instanceof Element) {
-                p.appendChild(c);
-            } else {
-                p.container.appendChild(c);
-            }
-        } else {
-            if (p instanceof Element) {
-                p.appendChild(c.container);
-            } else {
-                p.container.appendChild(c.container);
-            }
-        }
+        acont(p, c);
     }
 }
+//function a(p, c) {
+    //if (c instanceof Array) {
+        //for (var i = 0; i < c.length; i++) {
+            //if (c[i] instanceof Element || c[i] instanceof Text) {
+                //if (p instanceof Element) {
+                    //p.appendChild(c[i]);
+                //} else {
+                    //p.container.appendChild(c[i]);
+                //}
+            //} else {
+                //if (p instanceof Element) {
+                    //p.appendChild(c[i].container);
+                //} else {
+                    //p.container.appendChild(c[i].container);
+                //}
+            //}
+        //}
+    //} else {
+        //if (c instanceof Element) {
+            //if (p instanceof Element) {
+                //p.appendChild(c);
+            //} else {
+                //p.container.appendChild(c);
+            //}
+        //} else {
+            //if (p instanceof Element) {
+                //p.appendChild(c.container);
+            //} else {
+                //p.container.appendChild(c.container);
+            //}
+        //}
+    //}
+//}
 function stxt(c) {
     if (c instanceof Array) {
         for (var i in c) {

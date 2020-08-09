@@ -53,8 +53,10 @@ function go($appDir) {
 	        unset($c['session']);
 	        \session\start();
 	    }
-	
-	    require 'include' . DIRECTORY_SEPARATOR . 'acpp' . DIRECTORY_SEPARATOR . '1' . '.php';
+		if (isset($c['acp']['use'])) {
+	        require 'include' . DIRECTORY_SEPARATOR . 'acp' . DIRECTORY_SEPARATOR . $c['acp']['use'] . '.php';
+	        unset($c['acp']);
+	    }
 	/*
 	    if (isset($c['check']['use'])) {
 	        foreach ($c['check']['use'] as $value) {

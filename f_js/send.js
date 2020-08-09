@@ -80,7 +80,7 @@ function processResponse(r, action) {
                 break;
         }
     } else {
-        $sq[0][0].abort(action, 'processResponse: response is empty', dt, null);
+        $sq[0][0].abort(action, 'processResponse: response is empty', null, dt, null);
     }
     donext();
 }

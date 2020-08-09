@@ -1,6 +1,6 @@
 function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     this.container = cd();
-     this.container.title=peer.address + ":" +peer.port + ":" + channel_id;
+    this.container.title = peer.address + ":" +peer.port + ":" + channel_id;
     this.done = false;
     this.tmr1 = {tmr: null};
     this.valueE = cd();
@@ -20,7 +20,7 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     this.RETRY = 7;
 	this.ACTION =
 		{
-			GET_VALUE: 1
+			GET: 1
 		};
     this.uf_count = 0;//number of bad updates
     this.updateStr = function () {
@@ -36,16 +36,29 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     this.unmark = function (style) {
         clr(this.valueE, style);
     };
-    this.update = function (d) {console.log(d);
+    this.update = function (v) {
+		//console.log(d);
+		var id = null;
 		var value=null;
 		var state=null;
 		var vs = null;
 		var vns = null;
-		if (d !== null && typeof d[0] !== 'undefined') {
-		   value = parseFloat(d[0].value);
-		   state = parseInt(d[0].state);
-		   vs = parseInt(d[0].tv_sec);
-		   vns = parseInt(d[0].tv_nsec);
+		if(v !== null){
+			var data = acp_parseResponse(v, {id:null, value:null, tv_sec:null, tv_nsec:null, state:null});
+			if(data instanceof Array && data.length == 1){
+				var _id = parseInt(data[0].id);
+				var _value = parseFloat(data[0].value);
+				var _vs = parseInt(data[0].tv_sec);
+				var _vns = parseInt(data[0].tv_nsec);
+				var _state = parseInt(data[0].state);
+				if(!(isNaN(_id) || isNaN(_value) || !isFinite(_value) || isNaN(_vs) || isNaN(_vns) || isNaN(_state))){
+					id = _id;
+					value = _value;
+					state = _state;
+					vs = _vs;
+					vns = _vns;
+				}
+			}
 		}
         if(vs === null || vns ===null){
             this.valueE.innerHTML = '&empty;';
@@ -75,13 +88,15 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
         }
     };
     this.sendRequest = function () {
+		if(this.channel_id === null || this.peer.port === null || this.peer.ipaddr === null) return;
+		var pack = acp_buildRequestII(CMD_.GET_CHANNEL_FTS, this.channel_id );
         var data = [
             {
-                action: ['get_value'],
-                param: {address: this.peer.address, port: this.peer.port, item: [this.channel_id]}
+                action: ['get_data'],
+                param: {ipaddr: this.peer.ipaddr, port: this.peer.port, packs: pack, pack_count: 1}
             }
         ];
-        sendTo(this, data, this.ACTION.GET_VALUE, 'json_dss');
+        sendTo(this, data, this.ACTION.GET, 'server');
     };
 	this.startSendingRequest = function () {
 		var self = this;
@@ -99,7 +114,7 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
 	};
     this.confirm = function (action, d, dt_diff) {
 		switch (action) {
-			case this.ACTION.GET_VALUE:
+			case this.ACTION.GET:
 				this.update(d);
 				break;
 			default:
@@ -109,7 +124,7 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
 	};
 	this.abort = function (action, m, n) {
 		switch (action) {
-			case this.ACTION.GET_VALUE:
+			case this.ACTION.GET:
 				this.update(null);
 				break;
 			default:

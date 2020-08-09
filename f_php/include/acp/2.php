@@ -4,10 +4,9 @@ namespace acpp;
 
 define("ACPP_BUFFER_SIZE", 1024);
 
-define("ACPP_DELIMITER_COLUMN", "\t");
-define("ACPP_DELIMITER_ROW", "\n");
-define("ACPP_DELIMITER_BLOCK", "\r");
-define("ACPP_DELIMITER_END", "\f");
+define("ACPP_DELIMITER_START", "*");
+define("ACPP_DELIMITER_COLUMN", ":");
+define("ACPP_DELIMITER_END", ";");
 
 define("ACPP_RESP_APP_BUSY", "B");
 define("ACPP_RESP_APP_IDLE", "I");
@@ -108,7 +107,7 @@ function suspend( $sock) {
 
 function requestSend($sock, $cmd, $data=NULL, $pack_data_fun=NULL) {
     $buf = "";
-    $buf = $cmd . ACPP_DELIMITER_BLOCK;
+    $buf = ACPP_DELIMITER_START . $cmd . ACPP_DELIMITER_BLOCK;
     if (!is_null($data) && !is_null($pack_data_fun)) {
         $buf .= $pack_data_fun($data);
     }
@@ -120,54 +119,45 @@ function requestSendCmd($sock, $cmd) {
     return requestSend($sock, $cmd, NULL, NULL);
 }
 
-function requestSendI1List($sock, $cmd, $list) {
-    $packI1List = function ($list) {
-        $buf = "";
-        foreach ($list as $value) {
-            $buf.=$value . ACPP_DELIMITER_ROW;
-        }
-        return $buf;
-    };
-    return requestSend($sock, $cmd, $list, $packI1List);
+function getmFTS($sock, $cmd, $list) {
+	foreach ($list as $value) {
+		$buf = ACPP_DELIMITER_START . $value . ACPP_DELIMITER_COLUMN . $cmd . ACPP_DELIMITER_END;
+		send($buf, $sock);
+	}
+	return responseReadMNParse([
+        'id' => null,
+        'value' => null,
+        'tv_sec' => null,
+        'tv_nsec' => null,
+        'state' => null
+            ], count($list), $sock);
 }
 
 function requestSendI2List($sock, $cmd, $list) {
-    $packI2List = function ($list) {
-        $buf = "";
-        foreach ($list as $value) {
-            $v0 = intval($value['p0']);
-            $v1 = intval($value['p1']);
-            $buf.=$v0 . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_ROW;
-        }
-        return $buf;
-    };
-    return requestSend($sock,$cmd, $list, $packI2List);
+	foreach ($list as $value) {
+		$v0 = intval($value['p0']);
+		$v1 = intval($value['p1']);
+		$buf = ACPP_DELIMITER_START . $v0 . ACPP_DELIMITER_COLUMN . $cmd . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_END;
+		send($buf, $sock);
+	}
 }
 
 function requestSendI1F1List($sock,$cmd, $list) {
-    $packI1F1List = function ($list) {
-        $buf = "";
-        foreach ($list as $value) {
-            $v0 = intval($value['p0']);
-            $v1 = floatval($value['p1']);
-            $buf.=$v0 . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_ROW;
-        }
-        return $buf;
-    };
-    return requestSend($sock,$cmd, $list, $packI1F1List);
+	foreach ($list as $value) {
+		$v0 = intval($value['p0']);
+		$v1 = floatval($value['p1']);
+		$buf = ACPP_DELIMITER_START . $v0 . ACPP_DELIMITER_COLUMN . $cmd . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_END;
+		send($buf, $sock);
+	}
 }
 
 function requestSendI1S1List($sock,$cmd, $list) {
-    $packI1S1List = function ($list) {
-        $buf = "";
         foreach ($list as $value) {
             $v0 = intval($value['p0']);
             $v1 = $value['p1'];
-            $buf.=$v0 . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_ROW;
+            $buf = ACPP_DELIMITER_START . $v0 . ACPP_DELIMITER_COLUMN . $cmd . ACPP_DELIMITER_COLUMN . $v1 . ACPP_DELIMITER_END;
+			send($buf, $sock);
         }
-        return $buf;
-    };
-    return requestSend($sock,$cmd, $list, $packI1S1List);
 }
 
 function getBufParseStateData($sock) {
@@ -205,17 +195,42 @@ function rowToStr($str) {
     return $out;
 }
 
+//function getData($buf_str, $rowArr) {
+    //$data = [];
+    //$str = "";
+    //$field_count = \count($rowArr);
+    //for ($i = 0; $i < \strlen($buf_str); $i++) {
+        //if ($buf_str[$i] === ACPP_DELIMITER_END) {
+            //return $data;
+        //}
+       
+        //if ($buf_str[$i] === ACPP_DELIMITER_ROW) {
+            //$arr = rowToArr($str, $field_count);
+            //$row = array_merge([], $rowArr);
+            //$j = 0;
+            //foreach ($row as $key => $value) {
+                //$row[$key] = $arr[$j];
+                //$j++;
+            //}
+            //\array_push($data, $row);
+            //$str = null;
+            //continue;
+        //}
+        //$str.=$buf_str[$i];
+    //}
+    //return $data;
+//}
+
 function getData($buf_str, $rowArr) {
     $data = [];
-    $str = "";
+    $pack = "";
     $field_count = \count($rowArr);
     for ($i = 0; $i < \strlen($buf_str); $i++) {
+		if ($buf_str[$i] === ACPP_DELIMITER_START) {
+			//continue;
+		}
         if ($buf_str[$i] === ACPP_DELIMITER_END) {
-            return $data;
-        }
-       
-        if ($buf_str[$i] === ACPP_DELIMITER_ROW) {
-            $arr = rowToArr($str, $field_count);
+            $arr = rowToArr($pack, $field_count);
             $row = array_merge([], $rowArr);
             $j = 0;
             foreach ($row as $key => $value) {
@@ -223,10 +238,13 @@ function getData($buf_str, $rowArr) {
                 $j++;
             }
             \array_push($data, $row);
-            $str = null;
+            $pack = null;
             continue;
         }
-        $str.=$buf_str[$i];
+        if ($buf_str[$i] === ACPP_DELIMITER_START) {
+			continue;
+		}
+        $pack.=$buf_str[$i];
     }
     return $data;
 }
@@ -266,8 +284,17 @@ function responseReadNParse($rowArr,$sock) {
     return $data;
 }
 
-function responseReadMNParse($rowArr, $sock) {
-    $buf = responseReadText($sock);
+//function responseReadMNParse($rowArr, $sock) {
+    //$buf = responseReadText($sock);
+    //$data = getData($buf, $rowArr);
+    //if ($data === false) {
+        //throw new \Exception("responseReadMNParse: bad format");
+    //}
+    //return $data;
+//}
+
+function responseReadMNParse($rowArr, $pack_count, $sock) {
+    $buf = responseReadMPack($sock, $pack_count);
     $data = getData($buf, $rowArr);
     if ($data === false) {
         throw new \Exception("responseReadMNParse: bad format");
@@ -360,6 +387,24 @@ function responseReadText($sock) {
 	return $out;
 }
 
+function responseReadMPack($sock, $pack_count) {
+	$out = "";
+	for($c=0; $c < $pack_count; ){
+		$buf =  fread($sock, ACPP_BUFFER_SIZE);
+		if (\strlen($buf) === 0) {
+	        return $out;
+	    }
+	    for ($i = 0; $i < \strlen($buf); $i++) {
+			if($buf[$i] == ACPP_DELIMITER_END){
+				$c++;
+			}
+		}
+		$out .=$buf;
+	}
+	//echo $out;
+	return $out;
+}
+
 
 
 function parseDate($buf_str) {
@@ -410,15 +455,15 @@ function getFTS($sock) {
             ], $sock);
 }
 
-function getmFTS($sock) {
-    return responseReadMNParse([
-        'id' => null,
-        'value' => null,
-        'tv_sec' => null,
-        'tv_nsec' => null,
-        'state' => null
-            ], $sock);
-}
+//function getmFTS($sock) {
+    //return responseReadMNParse([
+        //'id' => null,
+        //'value' => null,
+        //'tv_sec' => null,
+        //'tv_nsec' => null,
+        //'state' => null
+            //], $sock);
+//}
 
 function parseString($buf_str) {
     $str = "";

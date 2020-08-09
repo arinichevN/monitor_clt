@@ -2,17 +2,17 @@ function Monitor() {
     this.type = VISU_TYPE.MAIN;
     this.container = {};
     this.channels = [
-		{name: 'dht22(1) 1', peer_id: 'gwua', remote_id: 1, mu: "&deg;C", group_id: 1},
-		{name: 'dht22(1) 2', peer_id: 'gwua', remote_id: 2, mu: "%", group_id: 1},
-		{name: 'dht22(2) 3', peer_id: 'gwua', remote_id: 3, mu: "&deg;C", group_id: 1},
-		{name: 'dht22(2) 4', peer_id: 'gwua', remote_id: 4, mu: "%", group_id: 1},
-		{name: 'ds18b20 5', peer_id: 'gwua', remote_id: 5, mu: "&deg;C", group_id: 2},
-		{name: 'ds18b20 6', peer_id: 'gwua', remote_id: 6, mu: "&deg;C", group_id: 2},
-		{name: 'max6675 7', peer_id: 'gwua', remote_id: 7, mu: "&deg;C", group_id: 3},
-		{name: 'max6675 8', peer_id: 'gwua', remote_id: 8, mu: "&deg;C", group_id: 3},
+		{name: 'dht22(1) 1', peer_id: 'gwua', remote_id: 21, mu: "&deg;C", group_id: 1},
+		{name: 'dht22(1) 2', peer_id: 'gwua', remote_id: 22, mu: "%", group_id: 1},
+		{name: 'dht22(2) 3', peer_id: 'gwua', remote_id: 23, mu: "&deg;C", group_id: 1},
+		//{name: 'dht22(2) 4', peer_id: 'gwua', remote_id: 4, mu: "%", group_id: 1},
+		//{name: 'ds18b20 5', peer_id: 'gwua', remote_id: 5, mu: "&deg;C", group_id: 2},
+		//{name: 'ds18b20 6', peer_id: 'gwua', remote_id: 6, mu: "&deg;C", group_id: 2},
+		//{name: 'max6675 7', peer_id: 'gwua', remote_id: 7, mu: "&deg;C", group_id: 3},
+		//{name: 'max6675 8', peer_id: 'gwua', remote_id: 8, mu: "&deg;C", group_id: 3},
     ];
     this.peers = [
-        {id: 'gwua', address: '127.0.0.1', port: 49188, timeout: 5, name: "модуль102"},
+        {id: 'gwua', ipaddr: '127.0.0.1', port: 49188, timeout: 5, name: "модуль102"},
 
     ];
     this.groups = [
