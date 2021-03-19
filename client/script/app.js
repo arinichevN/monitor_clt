@@ -1,4 +1,4 @@
-var app = {
+let app = {
     NAME_SIZE: 32,
     controller_state: null,
     version: 1,

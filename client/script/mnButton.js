@@ -28,9 +28,8 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     };
     this.blink = function (style) {
         cla(this.valueE, style);
-        var self = this;
-        var tmr = window.setTimeout(function () {
-            self.unmark(style);
+        let tmr = window.setTimeout(()=>{
+            this.unmark(style);
         }, 300);
     };
     this.unmark = function (style) {
@@ -38,19 +37,19 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     };
     this.update = function (v) {
 		//console.log(d);
-		var id = null;
-		var value=null;
-		var state=null;
-		var vs = null;
-		var vns = null;
+		let id = null;
+		let value=null;
+		let state=null;
+		let vs = null;
+		let vns = null;
 		if(v !== null){
-			var data = acp_parseResponse(v, {id:null, value:null, tv_sec:null, tv_nsec:null, state:null});
+			let data = acp_parseResponse(v, {id:null, value:null, tv_sec:null, tv_nsec:null, state:null});
 			if(data instanceof Array && data.length == 1){
-				var _id = parseInt(data[0].id);
-				var _value = parseFloat(data[0].value);
-				var _vs = parseInt(data[0].tv_sec);
-				var _vns = parseInt(data[0].tv_nsec);
-				var _state = parseInt(data[0].state);
+				let _id = parseInt(data[0].id);
+				let _value = parseFloat(data[0].value);
+				let _vs = parseInt(data[0].tv_sec);
+				let _vns = parseInt(data[0].tv_nsec);
+				let _state = parseInt(data[0].state);
 				if(!(isNaN(_id) || isNaN(_value) || !isFinite(_value) || isNaN(_vs) || isNaN(_vns) || isNaN(_state))){
 					id = _id;
 					value = _value;
@@ -89,8 +88,8 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
     };
     this.sendRequest = function () {
 		if(this.channel_id === null || this.peer.port === null || this.peer.ipaddr === null) return;
-		var pack = acp_buildRequestII(CMD_.GET_CHANNEL_FTS, this.channel_id );
-        var data = [
+		let pack = acp_buildRequest([ACPP_SIGN_REQUEST_GET, CMD_NOID_GET_FTS, this.channel_id]);
+        let data = [
             {
                 action: ['get_data'],
                 param: {ipaddr: this.peer.ipaddr, port: this.peer.port, packs: pack, pack_count: 1}
@@ -99,9 +98,8 @@ function MnButton(descr, mu, channel_id, peer,show_name,delay_send_usec) {
         sendTo(this, data, this.ACTION.GET, 'server');
     };
 	this.startSendingRequest = function () {
-		var self = this;
-		this.tmr = window.setInterval(function () {
-			self.sendRequest();
+		this.tmr = window.setInterval(()=>{
+			this.sendRequest();
 		}, this.delay_send_usec);
     };
     this.enable=function(){
