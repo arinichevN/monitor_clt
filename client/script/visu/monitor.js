@@ -2,23 +2,25 @@ function Monitor() {
     this.type = VISU_TYPE.MAIN;
     this.container = {};
     this.channels = [
-		{name: '1', peer_id: 'gwua', remote_id: 1, mu: "&deg;C", group_id: 1},
-		{name: '2', peer_id: 'gwua', remote_id: 2, mu: "&deg;C", group_id: 1},
-		{name: '3', peer_id: 'gwua', remote_id: 3, mu: "&deg;C", group_id: 1},
-		//{name: 'dht22(2) 4', peer_id: 'gwua', remote_id: 4, mu: "%", group_id: 1},
-		//{name: 'ds18b20 5', peer_id: 'gwua', remote_id: 5, mu: "&deg;C", group_id: 2},
-		//{name: 'ds18b20 6', peer_id: 'gwua', remote_id: 6, mu: "&deg;C", group_id: 2},
-		//{name: 'max6675 7', peer_id: 'gwua', remote_id: 7, mu: "&deg;C", group_id: 3},
-		//{name: 'max6675 8', peer_id: 'gwua', remote_id: 8, mu: "&deg;C", group_id: 3},
+		{name: '21', peer_id: 'gwua', remote_id: 21, mu: "&deg;C", group_id: 1},
+		{name: '22', peer_id: 'gwua', remote_id: 22, mu: "&deg;C", group_id: 1},
+		{name: '23', peer_id: 'gwua', remote_id: 23, mu: "&deg;C", group_id: 1},
+		
+		{name: '31', peer_id: 'gwua', remote_id: 31, mu: "&deg;C", group_id: 2},
+		{name: '32', peer_id: 'gwua', remote_id: 32, mu: "%", group_id: 2},
+		{name: '33', peer_id: 'gwua', remote_id: 33, mu: "&deg;C", group_id: 2},
+		{name: '34', peer_id: 'gwua', remote_id: 34, mu: "%", group_id: 2},
+		{name: '35', peer_id: 'gwua', remote_id: 35, mu: "&deg;C", group_id: 2},
+		{name: '36', peer_id: 'gwua', remote_id: 36, mu: "%", group_id: 2},
+		
     ];
     this.peers = [
         {id: 'gwua', ipaddr: '127.0.0.1', port: 49188, timeout: 5, name: "модуль102"},
 
     ];
     this.groups = [
-       {id: 1, name: 'arduino 1'},
-       {id: 2, name: 'arduino 2'},
-       {id: 3, name: 'arduino 3'},
+       {id: 1, name: 'DS18B20'},
+       {id: 2, name: 'DHT22'},
 
 
     ];
